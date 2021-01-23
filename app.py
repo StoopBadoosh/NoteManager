@@ -33,8 +33,16 @@ def enternotes():
         mongo.db.note_manager.insert_one(full_notes)
         return redirect('/')
 
-@app.route('/shownotes', methods=['GET','POST'])
+@app.route('/shownotes')
 def shownotes():
-    if request.method=='GET':
-        return render_template('shownotes.html')
-app.run()
+    notes={}
+    find = mongo.db.note_manager.find()
+    for loop in find:
+        name=loop['names']
+        note=loop['notes']
+        notes[name]=note
+    print(notes)
+    return render_template('shownotes.html', notes=notes)
+
+
+app.run(debug=True)
