@@ -5,7 +5,7 @@ import os
 #here we are creating our flask app
 app=Flask(__name__)
 mongostring=os.environ.get('MONGO_URI')
-if mongostring=='None':
+if mongostring==None:
     print('running on local server')
     file = open(".env", "r")
     connection_string = file.read()
