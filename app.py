@@ -2,15 +2,19 @@ from flask import Flask, render_template,request,redirect,flash
 from flask_pymongo import PyMongo
 import os
 
-#here we are getting the connection string
-file=open(".env","r")
-connection_string=file.read()
-connection_string=connection_string.strip()
-file.close()
-
 #here we are creating our flask app
-app=Flask('Anish')
-app.config['MONGO_URI']=connection_string
+app=Flask(__name__)
+mongostring=os.environ.get('MONGO_URI')
+if mongostring=='None':
+    print('running on local server')
+    file = open(".env", "r")
+    connection_string = file.read()
+    connection_string = connection_string.strip()
+    file.close()
+    app.config['MONGO_URI'] = connection_string
+else:
+    print('running on heroku server')
+    app.config['MONGO_URI'] = mongostring
 
 #here we are combining our flask object with mongodb
 mongo=PyMongo(app)
@@ -44,5 +48,5 @@ def shownotes():
     print(notes)
     return render_template('shownotes.html', notes=notes)
 
-
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run()
